@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+# 🌸 NihongoGO (日本語) - แอปพลิเคชันเรียนภาษาญี่ปุ่นอัจฉริยะแบบพรีเมียม
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+แอปพลิเคชันเว็บระดับ State-of-the-Art สำหรับการเรียนรู้ภาษาญี่ปุ่นอย่างเป็นขั้นตอน ตั้งแต่ระดับพื้นฐาน (อักษรคานะ) จนถึงตารางบอร์ดเรียนรู้คันจิ (N5 - N3) และพจนานุกรมอัจฉริยะ รองรับระบบ **100% Offline-First** ประหยัดพลังงาน และผสาน **On-Demand Gemini AI Engine** เพื่อการค้นคว้าระดับสูง
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 ฟีเจอร์หลัก (Key Features)
 
-## React Compiler
+### 1. 🎴 บอร์ดคันจิความหนาแน่นสูง (High-Density Kanji Board N5 - N3)
+* **ตารางธาตุคันจิพรีเมียม (Periodic Kanji Grid)**: บอร์ดคันจิออฟไลน์ 120+ ตัว (ระดับ N5 และ N4 ครบถ้วน) ที่จัดวางเป็นระเบียบ สบายตา ตัวอักษรขนาดใหญ่พิเศษ (`2.1rem` ขึ้นไป) และรองรับการแสดงผลทุกระดับสายตาโดยไม่ต้องขยายจอ
+* **แท็บจัดระดับ JLPT และ สะสมพิเศษ**: แยกการแสดงผลตามระดับความยากง่าย (N5, N4, N3) และรองรับแท็บ **"สะสมพิเศษ" (Custom Bookmarks)** ที่จะเก็บรวมรวมตัวอักษรที่คุณทรานสเลตด้วย AI หรือกดติดดาวไว้ เพื่อนำไปทบทวนหรือออกข้อสอบ (Quiz Mode) เฉพาะเจาะจง
+* **คลังคำสะกดผสมออฟไลน์ (Offline Compounds)**: เรียนรู้วิธีการนำคันจิตัวนั้นๆ ไปผสมคำอื่นในชีวิตประจำวันอย่างเป็นธรรมชาติ
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. 📖 พจนานุกรมญี่ปุ่น-ไทยอัจฉริยะ (Smart Dictionary & Bikago Detector)
+* **การซ้อนทับกันที่สมบูรณ์ (Zero Overlay Layout)**: แก้ปัญหาระบบ Z-Index Stacking Context ทำให้ช่องค้นหาคำศัพท์ลอยอยู่ด้านบนสุด ไร้การโดนบดบังจากเนื้อหาด้านล่าง
+* **ระบบสะพานดิกชันนารี (Dictionary Bridge)**: สามารถกดปุ่มค้นหา (🔍) จากตัวสะกดคำผสมในหน้าคันจิ เพื่อบินมาดูความหมายภาษาไทยและเสียงสะกดคำนั้นในหน้าพจนานุกรมได้ทันที
+* **คำศัพท์ชั่วคราวและการแปลด้วย AI (On-Demand AI Translation)**: หากคำศัพท์ผสมที่ส่งมาค้นหาไม่มีในคลังหลักออฟไลน์ ระบบจะไม่ตัดจบด้วยการแจ้งเตือน Error แต่จะสร้างการ์ดชั่วคราวพร้อมปุ่ม **"ดึงคำแปลพร้อมคำอ่านด้วย AI ✨"** ให้แปลแบบเรียลไทม์ในปุ่มเดียว
+* **ระบบตรวจจับคำนำหน้าสุภาพอัตโนมัติ (Bikago Auto-Detector) 💡**: ตรวจสอบคำศัพท์เริ่มต้นด้วยตัว `お` (โอะ) เช่น `お寿司` (ซูชิ), `お茶` (ชา), `お酒` (สาเก) และสร้างป้ายข้อมูลอธิบายประวัติรากศัพท์จริง (Root Word) เช่น `寿司 (sushi)` ทันที เพื่อป้องกันไม่ให้ผู้เรียนสับสนระหว่างคำสุภาพในชีวิตประจำวันและรากศัพท์ดั้งเดิม
 
-## Expanding the ESLint configuration
+### 3. 🔊 ระบบฟังเสียงอ่านอัจฉริยะ (Smart Web Speech API Playback)
+* **การแก้ปัญหา Standby Latency**: ระบบเสียงอ่านภาษาญี่ปุ่นมีกลไกป้องกันอาการเสียงกระตุกหรือพยางค์แรกหาย (เช่น ออกเสียง Depaato เป็น paato) โดยการรันระบบปลุกบัฟเฟอร์เสียงล่วงหน้าก่อนออกเสียงจริง ทำให้การอ่านมีความชัดเจน เต็มพยางค์ และสมบูรณ์แบบ 100%
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 4. 📝 แบบทดสอบส่วนตัว (Personalized Quiz Mode)
+* แบบทดสอบคันจิอัจฉริยะ ดึงอักขระจากแท็บระดับที่คุณกำลังเปิดอยู่ รวมถึงดึงคันจิจากหมวด "สะสมพิเศษ" เพื่อจัดทำแบบฝึกหัดเก็งข้อสอบย่อยแบบส่วนตัวได้ทันที
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠️ โครงสร้างเทคโนโลยี (Tech Stack)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* **Core**: React 18, TypeScript, Vite
+* **Styling**: Vanilla CSS ผสานความงามระดับ Glassmorphism และ Micro-animations
+* **AI Model**: Google Gemini 2.5 Flash API
+* **Icons**: Lucide React
+
+---
+
+## 📂 โครงสร้างแฟ้มข้อมูลที่สำคัญ (Project Structure)
+
+```text
+src/
+├── data/
+│   ├── kanji.ts        # ฐานข้อมูลตัวอักษรคันจิระดับ N5 และ N4 ออฟไลน์ (120+ ตัว)
+│   ├── vocab.ts        # ฐานข้อมูลคำศัพท์ออฟไลน์หลัก แบ่งหมวดหมู่ JLPT และประเภทคำ
+│   └── situations.ts   # บทสนทนาจำลองในชีวิตประจำวัน
+├── pages/
+│   ├── Kanji.tsx       # บอร์ดเรียนรู้คันจิ, ระบบวิเคราะห์ AI, และระบบทำแบบทดสอบ
+│   ├── Vocabulary.tsx  # หน้าพจนานุกรมค้นหาคำศัพท์, ระบบ Bikago Detector, Z-Index Engine
+│   └── Situations.tsx  # การจำลองสถานการณ์และบทสนทนาโต้ตอบ
+├── utils/
+│   └── speech.ts       # กลไกแก้ไขระบบเสียงอ่านภาษาญี่ปุ่นอัจฉริยะล่วงหน้า
+└── index.css           # โทนสี HSL, ฟอนต์สไตล์พรีเมียม และแอนิเมชันของระบบ
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 💻 วิธีการเริ่มรันเครื่องทดสอบ (Local Development)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. ติดตั้งไลบรารี
+```bash
+npm install
 ```
+
+### 2. รันระบบเซิร์ฟเวอร์แบบนักพัฒนา
+```bash
+npm run dev
+```
+ระบบจะเปิดพอร์ตการทำงานออฟไลน์ให้คุณทดสอบที่: `http://localhost:5173` หรือ `http://localhost:5174`
+
+### 3. ใส่รหัสเปิดใช้งาน AI (ไม่บังคับ)
+ไปที่หน้า **คลังศัพท์ Vocab** หรือ **คันจิ Kanji** ➡️ คลิกเปิดแถบ **"ตั้งค่าระบบดึงข้อมูลอัจฉริยะ"** ➡️ กรอกรหัส **Gemini API Key** ของคุณเพื่อเปิดฟีเจอร์ AI นอกคลังคำศัพท์ (หากไม่กรอก ระบบจะรันแบบออฟไลน์ 100% ด้วยความเสถียรสูงสุดทันที)
+
+---
+
+## 🌸 เกร็ดน่ารู้สำหรับนักพัฒนา (Developer Notes)
+
+* **ความชัดเจนของฟอนต์ (Readable Fonts)**: ตัวอักษรคันจิและเสียงอ่านทุกจุดในหน้ารายละเอียดได้รับการปรับระดับให้ใหญ่กว่าปกติ 30-40% เพื่อให้อ่านออกเขียนได้จริงในระดับสายตา 100% โดยไม่ต้องพึ่งพาการซูมเบราว์เซอร์
+* **Z-Index Layering**: หากมีคำค้นหาใหม่ๆ โผล่ขึ้นมา ห้ามลบ `zIndex: 999999` ออกจากตัว Suggestions Dropdown Card เด็ดขาดเพื่อป้องกันไม่ให้ป๊อปอัปผลการเสิร์ชโดนกล่องเนื้อหาทับซ้อน
