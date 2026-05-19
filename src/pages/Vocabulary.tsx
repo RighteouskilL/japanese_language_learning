@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Volume2, RefreshCw, GraduationCap, Award, HelpCircle, Search, Key, Sparkles, Plus, Trash2, ChevronDown, ChevronUp, Star, BookOpen } from 'lucide-react';
 import { vocabData } from '../data/vocab';
 import type { VocabItem } from '../data/vocab';
@@ -86,6 +87,40 @@ export default function Vocabulary() {
       setApiStatus('success');
     }
   }, []);
+
+  // Listen to cross-page search triggers (e.g. from Kanji or situations)
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state && (location.state as any).searchWord && localVocab.length > 0) {
+      const wordToLookup = (location.state as any).searchWord;
+      
+      // Find the word in our localVocab database
+      const found = localVocab.find(item => item.word === wordToLookup);
+      if (found) {
+        setSelectedDictWord(found);
+        setMode('dict');
+        setDictSearchQuery(wordToLookup);
+        speakJapanese(found.word);
+      } else {
+        // If not found in offline db, set a beautiful temporary pending card so they can translate via AI directly!
+        setSelectedDictWord({
+          word: wordToLookup,
+          reading: '...',
+          romaji: '...',
+          thai: 'ไม่พบคำศัพท์นี้ในคลังพจนานุกรมออฟไลน์หลัก คุณสามารถสแตนด์บายดึงคำแปลพร้อมคำสะกดละเอียดของคำผสมนี้ผ่าน AI ได้ทันทีครับ ✨',
+          category: 'general',
+          level: 'custom',
+          pos: 'expression',
+          isTemporary: true
+        } as any);
+        setMode('dict');
+        setDictSearchQuery(wordToLookup);
+      }
+      
+      // Clear location state to prevent repeating lookup on subsequent re-renders
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, localVocab]);
 
   // Close suggestions dropdown when clicking outside
   useEffect(() => {
@@ -656,7 +691,7 @@ Do not wrap the output in \`\`\`json or \`\`\` markdown blocks. Return only the 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'left' }} className="animate-fade-in">
           
           {/* Main Dictionary Search Console */}
-          <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid rgba(100, 223, 223, 0.25)', boxShadow: '0 8px 32px rgba(100, 223, 223, 0.05)' }}>
+          <div className="glass-card" style={{ position: 'relative', zIndex: 10, padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid rgba(100, 223, 223, 0.25)', boxShadow: '0 8px 32px rgba(100, 223, 223, 0.05)' }}>
             
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', textAlign: 'center', marginBottom: '0.5rem' }}>
               <span style={{ color: 'var(--secondary)', fontWeight: 600, fontSize: '0.85rem', letterSpacing: '2px', textTransform: 'uppercase' }}>Smart Japanese-Thai Dictionary</span>
@@ -665,7 +700,7 @@ Do not wrap the output in \`\`\`json or \`\`\` markdown blocks. Return only the 
             </div>
 
             {/* Interactive Search Field with Suggestion Box */}
-            <div style={{ position: 'relative', maxWidth: '650px', width: '100%', margin: '0 auto' }} ref={suggestionsRef}>
+            <div style={{ position: 'relative', zIndex: 99999, maxWidth: '650px', width: '100%', margin: '0 auto' }} ref={suggestionsRef}>
               <div style={{ position: 'relative' }}>
                 <Search size={22} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--secondary)' }} />
                 <input 
@@ -714,7 +749,7 @@ Do not wrap the output in \`\`\`json or \`\`\` markdown blocks. Return only the 
                   border: '1px solid rgba(100, 223, 223, 0.3)', 
                   borderRadius: '14px', 
                   boxShadow: '0 12px 40px rgba(0,0,0,0.5)', 
-                  zIndex: 999, 
+                  zIndex: 999999, 
                   maxHeight: '380px', 
                   overflowY: 'auto' 
                 }}>
@@ -874,13 +909,13 @@ Do not wrap the output in \`\`\`json or \`\`\` markdown blocks. Return only the 
                 {/* Sub Readings */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>คำอ่านอักษรคานะ</span>
-                    <span style={{ fontSize: '1.15rem', color: 'var(--primary)', fontWeight: 600 }}>{selectedDictWord.reading}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>คำอ่านอักษรคานะ</span>
+                    <span style={{ fontSize: '1.45rem', color: 'var(--primary)', fontWeight: 600 }}>{selectedDictWord.reading}</span>
                   </div>
                   <div style={{ borderLeft: '1px solid var(--border)', height: '35px' }}></div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>อักษรโรมันจิ</span>
-                    <span style={{ fontSize: '1.15rem', color: 'var(--secondary)', fontWeight: 600, textTransform: 'none' }}>{selectedDictWord.romaji}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>อักษรโรมันจิ</span>
+                    <span style={{ fontSize: '1.45rem', color: 'var(--secondary)', fontWeight: 600, textTransform: 'none' }}>{selectedDictWord.romaji}</span>
                   </div>
                 </div>
 
@@ -895,8 +930,8 @@ Do not wrap the output in \`\`\`json or \`\`\` markdown blocks. Return only the 
                   {/* Badges line */}
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <span style={{
-                      fontSize: '0.75rem',
-                      padding: '2px 8px',
+                      fontSize: '0.85rem',
+                      padding: '3px 10px',
                       borderRadius: '6px',
                       background: 'rgba(100, 223, 223, 0.12)',
                       color: 'var(--secondary)',
@@ -905,8 +940,8 @@ Do not wrap the output in \`\`\`json or \`\`\` markdown blocks. Return only the 
                       ระดับ: JLPT {selectedDictWord.level}
                     </span>
                     <span style={{
-                      fontSize: '0.75rem',
-                      padding: '2px 8px',
+                      fontSize: '0.85rem',
+                      padding: '3px 10px',
                       borderRadius: '6px',
                       background: 'rgba(255, 255, 255, 0.05)',
                       color: 'var(--text-muted)',
@@ -918,19 +953,44 @@ Do not wrap the output in \`\`\`json or \`\`\` markdown blocks. Return only the 
 
                   {/* Thai definition card */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>คำแปลความหมายภาษาไทย:</span>
+                    <span style={{ fontSize: '0.92rem', color: 'var(--text-muted)' }}>คำแปลความหมายภาษาไทย:</span>
                     <div style={{ 
                       background: 'rgba(0,0,0,0.2)', 
                       border: '1px solid var(--border)', 
                       borderRadius: '12px', 
                       padding: '1.25rem', 
-                      fontSize: '1.25rem', 
+                      fontSize: '1.5rem', 
                       fontWeight: 600,
                       color: '#fff',
                       boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.2)',
                       lineHeight: '1.4'
                     }}>
-                      {selectedDictWord.thai}
+                      {(selectedDictWord as any).isTemporary ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', textAlign: 'center' }}>
+                          <span style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontWeight: 400 }}>
+                            {selectedDictWord.thai}
+                          </span>
+                          <button
+                            className="btn btn-primary"
+                            onClick={handleAiLookup}
+                            disabled={isSearchingAi}
+                            style={{
+                              background: 'linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%)',
+                              fontSize: '0.85rem',
+                              padding: '0.6rem 1.5rem',
+                              alignSelf: 'center',
+                              boxShadow: '0 0 15px rgba(100, 223, 223, 0.3)',
+                              color: '#000',
+                              fontWeight: 700
+                            }}
+                          >
+                            <Sparkles size={14} className={isSearchingAi ? 'spin-icon' : ''} />
+                            <span>{isSearchingAi ? 'กำลังวิเคราะห์ด้วย AI...' : 'ดึงคำแปลพร้อมคำอ่านด้วย AI ✨'}</span>
+                          </button>
+                        </div>
+                      ) : (
+                        selectedDictWord.thai
+                      )}
                     </div>
                   </div>
 
